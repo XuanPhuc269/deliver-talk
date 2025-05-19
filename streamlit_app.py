@@ -1,5 +1,7 @@
 import streamlit as st
 import time
+from server import transcribe_audio
+import os
 
 # ---- Page Setup ----
 st.set_page_config(
@@ -36,20 +38,27 @@ if st.session_state.get("sidebar_action", "transcribe") == "transcribe":
     )
     transcript = {}
     if uploaded_file:
+        temp_file_path = os.path.join("temp", uploaded_file.name)
+        os.makedirs("temp", exist_ok=True)
+        with open(temp_file_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+            
         if st.button("Chuyển giọng nói thành văn bản"):
             with st.spinner("Đang xử lý tệp âm thanh..."):
-                # Mô phỏng quá trình chuyển đổi
-                time.sleep(2)
-                transcript = {
-                    "Shipper": "Xin chào! Chị có đơn hàng.",
-                    "Khách hàng": "Cảm ơn bạn"
-                }
-            st.success("Chuyển đổi thành công!")
-            # ---- Hiển thị kết quả ----
+                try:
+                    transcription = transcribe_audio(temp_file_path)
+                    transcript = {"Transcription": transcription}
+                    st.success("Chuyển đổi thành công!")
+                except Exception as e:
+                    st.error(f"Đã xảy ra lỗi: {e}")
+                finally:
+                    # clear
+                    os.remove(temp_file_path)
+
+            # show results
             st.markdown("### 📝 Kết quả chuyển đổi:")
             for speaker, line in transcript.items():
-                color = "red" if speaker == "Khách hàng" else "blue"
-                st.markdown(f"<span style='color:{color}; font-size: 20px;'><strong>{speaker}:</strong> {line}</span>", unsafe_allow_html=True)
+                st.markdown(f"**{speaker}:** {line}")
     else:
         st.warning("Vui lòng tải lên tệp âm thanh để bắt đầu.")
 
