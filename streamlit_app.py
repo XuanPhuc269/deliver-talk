@@ -64,9 +64,13 @@ if st.session_state.get("sidebar_action", "transcribe") == "transcribe":
 
 elif st.session_state.get("sidebar_action", "storage") == "storage":
     st.markdown("### 📦 Kho lưu trữ")
-    st.markdown("Chức năng này sẽ được cập nhật trong các phiên bản sau.")
-    st.warning("Chức năng này hiện chưa khả dụng.")
+    file_data = [
+        {"Tên file": "file1.wav", "Kích cỡ": "2MB", "Ngày đăng tải": "2025-05-18", "Transcription file": "file1.txt"},
+        {"Tên file": "file2.mp3", "Kích cỡ": "3MB", "Ngày đăng tải": "2025-05-18", "Transcription file": "file2.txt"},
+        {"Tên file": "file3.wav", "Kích cỡ": "4MB", "Ngày đăng tải": "2025-05-20", "Transcription file": "file3.txt"},
+    ]
+    st.table(file_data)
 
 # ---- Footer ----
 st.markdown("---")
-st.caption("© 2025 DeliverTalk | Được phát triển bởi nhóm <strong style='color:#ff4b4;'>F4 SOICT</strong>", unsafe_allow_html=True)
+st.caption("© 2025 DeliverTalk | Được phát triển bởi nhóm <strong style='color:#ff4b4;'>Fast & Shipperious</strong>", unsafe_allow_html=True)
